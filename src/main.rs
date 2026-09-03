@@ -11,7 +11,8 @@ async fn main() {
     loop {
         clear_background(BLACK);
 
-        sim.draw();
+        // sim.draw();
+        sim.draw2();
         
         next_frame().await;
     }
