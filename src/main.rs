@@ -1,17 +1,19 @@
-fn add(first_value: i32, second_value: i32) -> i32 {
-    first_value + second_value
-}
+mod utils;
+mod simulation;
+use macroquad::prelude::*;
 
-fn print<T: std::fmt::Display>(to_print: T) {
-    println!("{}", to_print);
-}
+#[macroquad::main("KIRIN")]
+async fn main() {
 
-fn main() {
-    let a: i32 = 5;
-    let b: i32 = 5;
+    let sim = simulation::Simulation::new(5, 5);
+    sim.show();
 
-    let c: i32 = add(a, b);
+    loop {
+        clear_background(BLACK);
 
-    print(c);
-    print(5);
+        sim.draw();
+        
+        next_frame().await;
+    }
+
 }
