@@ -1,72 +1,54 @@
-use crate::utils;
-use macroquad::prelude::*;
-
 pub struct Simulation {
-    size_x: i32,
-    size_y: i32,
+    nx: usize,
+    ny: usize,
+    delay: f32,
+    time: f32,
+    last_switch_time: f32,
+    inverted: bool,
 }
 
 impl Simulation {
-    pub fn new(size_x: i32, size_y: i32) -> Self {
+    pub fn new(nx: usize, ny: usize) -> Self {
+        assert!(nx > 0, "nx must be greater than zero");
+        assert!(ny > 0, "ny must be greater than zero");
+
+        let delay: f32 = 0.1;
+        let time: f32 = 0.0;
+        let last_switch_time: f32 = time;
+        let inverted: bool = true;
         Self {
-            size_x,
-            size_y,
+            nx,
+            ny,
+            delay,
+            time,
+            last_switch_time,
+            inverted,
         }
     }
 
-    pub fn draw(&self) {
-        let t: f32 = get_time() as f32;
-
-        let r = (t.sin() + 1.0) / 2.0;
-        let g = ((t + 2.0).sin() + 1.0) / 2.0;
-        let b = ((t + 4.0).sin() + 1.0) / 2.0;
-
-        let color = Color::new(r, g, b,  1.0);
-
-        let initial_pos = vec2(200.0, 200.0);
-        let final_pos = vec2(400.0, 400.0);
-
-        let animation_duration: f32 = 2.0;
-        let s: f32 = (t / animation_duration).clamp(0.0, 1.0);
-        
-        let curr_pos = initial_pos.lerp(final_pos, s);
-
-        draw_circle(curr_pos.x, curr_pos.y, 50.0, color);
+    pub fn nx(&self) -> usize {
+        self.nx
     }
-    
-    pub fn draw2(&self) {
-        let square_size: f32 = 50.0;
 
-        
-        let square_number_x: i32 = 8;
-        let square_number_y: i32 = 8;
-        let total_square_number: i32 = square_number_x * square_number_y;
+    pub fn ny(&self) -> usize {
+        self.ny
+    }
 
-        let width = screen_width();
-        let height = screen_height();
+    pub fn value_at(&self, i: usize, j: usize) -> f32 {
+        let is_even_cell: bool = (i + j).is_multiple_of(2);
+        let is_light: bool = is_even_cell ^ self.inverted;
 
-        let width_per_square: f32 = width / square_number_x as f32;
-        let height_per_square: f32 = height / square_number_y as f32;
+        if is_light { 1.0 } else { 0.0 }
+    }
 
+    pub fn update(&mut self, dt: f32) {
+        self.time += dt;
 
+        let should_switch_color: bool = (self.time - self.last_switch_time) > self.delay;
 
-        // draw_rectangle(position.x, position.y, square_size, square_size, BLACK);
-        let light_square: Color = Color::from_hex(0xEEEED2);
-        let dark_square: Color = Color::from_hex(0x769656);
-
-        for j in 0..square_number_y {
-            for i in 0..square_number_x {
-                let position: Vec2 = vec2(width_per_square * i as f32 , height_per_square * j as f32);
-                let color: Color  = if (i + j) % 2 == 0 {light_square} else {dark_square};
-
-                draw_rectangle(position.x, position.y, width_per_square, height_per_square, color);
-            }
+        if should_switch_color {
+            self.last_switch_time = self.time;
+            self.inverted = !self.inverted;
         }
-
     }
-
-    pub fn show(&self) {
-        println!("{}", self.size_x);
-        println!("{}", self.size_y);
-    }
-} 
+}

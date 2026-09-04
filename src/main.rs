@@ -1,20 +1,18 @@
-mod utils;
+mod application;
+mod renderer;
 mod simulation;
-use macroquad::prelude::*;
+
+use application::Application;
+use macroquad::prelude::next_frame;
 
 #[macroquad::main("KIRIN")]
 async fn main() {
-
-    let sim = simulation::Simulation::new(5, 5);
-    sim.show();
+    let mut app: Application = Application::new();
 
     loop {
-        clear_background(BLACK);
+        app.update();
+        app.draw();
 
-        // sim.draw();
-        sim.draw2();
-        
         next_frame().await;
     }
-
 }
