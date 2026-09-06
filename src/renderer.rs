@@ -10,21 +10,30 @@ const DARK_SQUARE_COLOR: Color = Color::from_hex(0x769656);
 pub struct Renderer {
     texture: Texture2D,
     image: Image,
+    render_time: f32,
 }
 
 impl Renderer {
     pub fn new(width: usize, height: usize) -> Self {
-        let width = u16::try_from(width).expect("texture width must fit in a u16");
-        let height = u16::try_from(height).expect("texture height must fit in a u16");
-        let image = Image::gen_image_color(width, height, BLACK);
+        let width: u16 = width as u16;
+        let height: u16 = height as u16;
+        let render_time: f32 = 0.0;
 
-        let texture = Texture2D::from_image(&image);
+        let image: Image = Image::gen_image_color(width, height, BLACK);
+
+        let texture: Texture2D = Texture2D::from_image(&image);
         texture.set_filter(FilterMode::Nearest);
 
-        Self { texture, image }
+        Self {
+            texture,
+            image,
+            render_time,
+        }
     }
 
     pub fn update_from(&mut self, simulation: &Simulation) {
+        self.render_time = simulation.time();
+
         for j in 0..simulation.ny() {
             for i in 0..simulation.nx() {
                 let value: f32 = simulation.value_at(i, j);
@@ -46,6 +55,7 @@ impl Renderer {
         let camera: Camera2D = self.create_camera();
 
         set_camera(&camera);
+        // camera.screen_to_world(point)
 
         draw_texture_ex(
             &self.texture,
@@ -53,9 +63,19 @@ impl Renderer {
             0.0,
             WHITE,
             DrawTextureParams {
-                dest_size: Some(vec2(800.0, 800.0)),
+                dest_size: Some(vec2(WORLD_WIDTH, WORLD_HEIGHT)),
                 ..Default::default()
             },
+        );
+
+        set_default_camera();
+
+        draw_text(
+            &format!("Time {:.2} s", &self.render_time),
+            0.0,
+            25.0,
+            25.0,
+            DARKGRAY,
         );
     }
 

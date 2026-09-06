@@ -34,21 +34,28 @@ impl Simulation {
         self.ny
     }
 
-    pub fn value_at(&self, i: usize, j: usize) -> f32 {
-        let is_even_cell: bool = (i + j).is_multiple_of(2);
-        let is_light: bool = is_even_cell ^ self.inverted;
+    pub fn time(&self) -> f32 {
+        self.time
+    }
 
-        if is_light { 1.0 } else { 0.0 }
+    pub fn value_at(&self, i: usize, j: usize) -> f32 {
+        // let is_even_cell: bool = (i + j).is_multiple_of(2);
+        // let is_light: bool = is_even_cell ^ self.inverted;
+
+        // if is_light { 1.0 } else { 0.0 }
+        1.0
     }
 
     pub fn update(&mut self, dt: f32) {
         self.time += dt;
 
-        let should_switch_color: bool = (self.time - self.last_switch_time) > self.delay;
+        // let should_switch_color: bool = (self.time - self.last_switch_time) > self.delay;
 
-        if should_switch_color {
-            self.last_switch_time = self.time;
-            self.inverted = !self.inverted;
-        }
+        // if should_switch_color {
+        //     self.last_switch_time = self.time;
+        //     self.inverted = !self.inverted;
+        // }
     }
+
+    pub fn add_density(&self, x_pos: f32, y_pos: f32) {}
 }

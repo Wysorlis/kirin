@@ -10,6 +10,7 @@ async fn main() {
     let mut app: Application = Application::new();
 
     loop {
+        app.handle_inputs();
         app.update();
         app.draw();
 

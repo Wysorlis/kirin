@@ -6,6 +6,7 @@ use macroquad::prelude::*;
 pub struct Application {
     simulation: Simulation,
     renderer: Renderer,
+    paused: bool,
 }
 
 impl Application {
@@ -16,17 +17,34 @@ impl Application {
         Self {
             simulation,
             renderer,
+            paused: false,
         }
     }
 
     pub fn update(&mut self) {
-        let dt: f32 = get_frame_time();
+        if !self.paused {
+            let dt: f32 = get_frame_time();
 
-        self.simulation.update(dt);
+            self.simulation.update(dt);
+        }
+
+        // Met à jour le rendu même lorsque la simulation est en pause.
         self.renderer.update_from(&self.simulation);
     }
 
     pub fn draw(&self) {
         self.renderer.draw();
+    }
+
+    pub fn handle_inputs(&mut self) {
+        if is_key_pressed(KeyCode::Space) {
+            self.paused = !self.paused;
+        }
+
+        if is_mouse_button_down(MouseButton::Right) {
+            let (x, y) = mouse_position();
+            // self.renderer.camera
+            self.simulation.add_density(x, y);
+        }
     }
 }
