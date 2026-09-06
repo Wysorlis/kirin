@@ -1,10 +1,9 @@
+use macroquad::prelude::Vec2;
 pub struct Simulation {
     nx: usize,
     ny: usize,
-    delay: f32,
     time: f32,
-    last_switch_time: f32,
-    inverted: bool,
+    density: Vec<f32>,
 }
 
 impl Simulation {
@@ -12,17 +11,13 @@ impl Simulation {
         assert!(nx > 0, "nx must be greater than zero");
         assert!(ny > 0, "ny must be greater than zero");
 
-        let delay: f32 = 0.1;
         let time: f32 = 0.0;
-        let last_switch_time: f32 = time;
-        let inverted: bool = true;
+        let density: Vec<f32> = vec![0.0; nx * ny];
         Self {
             nx,
             ny,
-            delay,
             time,
-            last_switch_time,
-            inverted,
+            density,
         }
     }
 
@@ -39,11 +34,7 @@ impl Simulation {
     }
 
     pub fn value_at(&self, i: usize, j: usize) -> f32 {
-        // let is_even_cell: bool = (i + j).is_multiple_of(2);
-        // let is_light: bool = is_even_cell ^ self.inverted;
-
-        // if is_light { 1.0 } else { 0.0 }
-        1.0
+        self.density[i + j * self.nx]
     }
 
     pub fn update(&mut self, dt: f32) {
@@ -57,5 +48,15 @@ impl Simulation {
         // }
     }
 
-    pub fn add_density(&self, x_pos: f32, y_pos: f32) {}
+    pub fn add_density(&mut self, x_ratio: f32, y_ratio: f32) {
+        // Ignorer les clics hors du domaine.
+        if !(0.0..1.0).contains(&x_ratio) || !(0.0..1.0).contains(&y_ratio) {
+            return;
+        }
+
+        let i: usize = (x_ratio * self.nx as f32) as usize;
+        let j: usize = (y_ratio * self.ny as f32) as usize;
+
+        self.density[i + j * self.nx] = 1.0;
+    }
 }

@@ -10,6 +10,7 @@ const DARK_SQUARE_COLOR: Color = Color::from_hex(0x769656);
 pub struct Renderer {
     texture: Texture2D,
     image: Image,
+    camera: Camera2D,
     render_time: f32,
 }
 
@@ -17,16 +18,18 @@ impl Renderer {
     pub fn new(width: usize, height: usize) -> Self {
         let width: u16 = width as u16;
         let height: u16 = height as u16;
-        let render_time: f32 = 0.0;
 
         let image: Image = Image::gen_image_color(width, height, BLACK);
-
         let texture: Texture2D = Texture2D::from_image(&image);
         texture.set_filter(FilterMode::Nearest);
+        let camera: Camera2D = Self::create_camera();
+
+        let render_time: f32 = 0.0;
 
         Self {
             texture,
             image,
+            camera,
             render_time,
         }
     }
@@ -49,12 +52,12 @@ impl Renderer {
         self.texture.update(&self.image);
     }
 
-    pub fn draw(&self) {
+    pub fn draw(&mut self) {
         clear_background(BLACK);
 
-        let camera: Camera2D = self.create_camera();
+        self.update_camera();
 
-        set_camera(&camera);
+        set_camera(&self.camera);
         // camera.screen_to_world(point)
 
         draw_texture_ex(
@@ -79,7 +82,20 @@ impl Renderer {
         );
     }
 
-    fn create_camera(&self) -> Camera2D {
+    fn create_camera() -> Camera2D {
+        Camera2D {
+            target: vec2(WORLD_WIDTH / 2.0, WORLD_HEIGHT / 2.0),
+            zoom: vec2(2.0 / WORLD_WIDTH, -2.0 / WORLD_HEIGHT),
+            viewport: Some(Self::calculate_camera_viewport()),
+            ..Default::default()
+        }
+    }
+
+    fn update_camera(&mut self) {
+        self.camera.viewport = Some(Self::calculate_camera_viewport());
+    }
+
+    fn calculate_camera_viewport() -> (i32, i32, i32, i32) {
         let screen_ratio: f32 = screen_width() / screen_height();
         let world_ratio: f32 = WORLD_WIDTH / WORLD_HEIGHT;
 
@@ -99,11 +115,13 @@ impl Renderer {
             (0, 0, width as i32, height as i32)
         };
 
-        Camera2D {
-            target: vec2(WORLD_WIDTH / 2.0, WORLD_HEIGHT / 2.0),
-            zoom: vec2(2.0 / WORLD_WIDTH, -2.0 / WORLD_HEIGHT),
-            viewport: Some(viewport),
-            ..Default::default()
-        }
+        viewport
+    }
+    pub fn screen_to_world(&self, mouse_position: (f32, f32)) -> Vec2 {
+        let (x_mouse, y_mouse) = mouse_position;
+
+        let world_coordinates: Vec2 = self.camera.screen_to_world(vec2(x_mouse, y_mouse));
+
+        world_coordinates
     }
 }

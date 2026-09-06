@@ -11,7 +11,7 @@ pub struct Application {
 
 impl Application {
     pub fn new() -> Self {
-        let simulation: Simulation = Simulation::new(8, 8);
+        let simulation: Simulation = Simulation::new(100, 100);
         let renderer: Renderer = Renderer::new(simulation.nx(), simulation.ny());
 
         Self {
@@ -32,7 +32,7 @@ impl Application {
         self.renderer.update_from(&self.simulation);
     }
 
-    pub fn draw(&self) {
+    pub fn draw(&mut self) {
         self.renderer.draw();
     }
 
@@ -41,10 +41,14 @@ impl Application {
             self.paused = !self.paused;
         }
 
-        if is_mouse_button_down(MouseButton::Right) {
-            let (x, y) = mouse_position();
-            // self.renderer.camera
-            self.simulation.add_density(x, y);
+        if is_mouse_button_down(MouseButton::Left) {
+            let click_world_coordinates: Vec2 = self.renderer.screen_to_world(mouse_position());
+
+            self.simulation.add_density(
+                click_world_coordinates.x / 800.0,
+                click_world_coordinates.y / 800.0,
+            );
         }
     }
 }
+//
