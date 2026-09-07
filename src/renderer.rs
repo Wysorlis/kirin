@@ -4,9 +4,6 @@ use macroquad::prelude::*;
 const WORLD_WIDTH: f32 = 800.0;
 const WORLD_HEIGHT: f32 = 800.0;
 
-const LIGHT_SQUARE_COLOR: Color = Color::from_hex(0xEEEED2);
-const DARK_SQUARE_COLOR: Color = Color::from_hex(0x769656);
-
 pub struct Renderer {
     texture: Texture2D,
     image: Image,
@@ -22,6 +19,7 @@ impl Renderer {
         let image: Image = Image::gen_image_color(width, height, BLACK);
         let texture: Texture2D = Texture2D::from_image(&image);
         texture.set_filter(FilterMode::Nearest);
+        // texture.set_filter(FilterMode::Linear);
         let camera: Camera2D = Self::create_camera();
 
         let render_time: f32 = 0.0;
@@ -37,14 +35,12 @@ impl Renderer {
     pub fn update_from(&mut self, simulation: &Simulation) {
         self.render_time = simulation.time();
 
+        let (min_value, max_value) = simulation.get_field_minmax();
+
         for j in 0..simulation.ny() {
             for i in 0..simulation.nx() {
                 let value: f32 = simulation.value_at(i, j);
-                let color: Color = if value > 0.5 {
-                    LIGHT_SQUARE_COLOR
-                } else {
-                    DARK_SQUARE_COLOR
-                };
+                let color: Color = self.color_map(value, min_value, max_value);
                 self.image.set_pixel(i as u32, j as u32, color);
             }
         }
@@ -117,11 +113,38 @@ impl Renderer {
 
         viewport
     }
+
     pub fn screen_to_world(&self, mouse_position: (f32, f32)) -> Vec2 {
         let (x_mouse, y_mouse) = mouse_position;
 
         let world_coordinates: Vec2 = self.camera.screen_to_world(vec2(x_mouse, y_mouse));
 
         world_coordinates
+    }
+
+    fn color_map(&self, value: f32, min_field_value: f32, max_field_value: f32) -> Color {
+        let min_color: Color = BLUE;
+        let max_color: Color = RED;
+
+        if (max_field_value - min_field_value) > 0.0 {
+            let ratio: f32 = value / (max_field_value - min_field_value);
+            let clamped_ratio: f32 = ratio.clamp(0.0, 1.0);
+    
+            let interpolated_color: Color = self.lerp_between_colors(min_color, max_color, clamped_ratio);
+
+            interpolated_color
+        } else {
+            MAGENTA
+        }
+    }
+
+    fn lerp_between_colors(&self, min_color: Color, max_color: Color, t: f32) -> Color {
+        let t: f32 = t.clamp(0.0, 1.0);
+        let min_color_vector: glam::Vec4 = min_color.to_vec();
+        let max_color_vector: glam::Vec4 = max_color.to_vec();
+
+        let interpolated_color_vector: glam::Vec4 = glam::Vec4::lerp(min_color_vector, max_color_vector, t);
+
+        Color::from_vec(interpolated_color_vector)
     }
 }

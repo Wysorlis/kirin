@@ -45,6 +45,7 @@ impl Application {
             let click_world_coordinates: Vec2 = self.renderer.screen_to_world(mouse_position());
 
             self.simulation.add_density(
+                1.0,
                 click_world_coordinates.x / 800.0,
                 click_world_coordinates.y / 800.0,
             );
