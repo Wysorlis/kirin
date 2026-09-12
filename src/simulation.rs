@@ -1,8 +1,13 @@
 pub struct Simulation {
     nx: usize,
     ny: usize,
+
     time: f32,
-    density: Vec<f32>,
+
+    u: Vec<f32>,
+    v: Vec<f32>,
+    pressure: Vec<f32>,
+    dye: Vec<f32>,
 }
 
 impl Simulation {

@@ -40,7 +40,7 @@ impl Renderer {
         for j in 0..simulation.ny() {
             for i in 0..simulation.nx() {
                 let value: f32 = simulation.value_at(i, j);
-                let color: Color = self.color_map(value, min_value, max_value);
+                let color: Color = Self::color_map(value, min_value, max_value);
                 self.image.set_pixel(i as u32, j as u32, color);
             }
         }
@@ -122,15 +122,15 @@ impl Renderer {
         world_coordinates
     }
 
-    fn color_map(&self, value: f32, min_field_value: f32, max_field_value: f32) -> Color {
+    fn color_map(value: f32, min_field_value: f32, max_field_value: f32) -> Color {
         let min_color: Color = BLUE;
         let max_color: Color = RED;
 
-        if (max_field_value - min_field_value) > 0.0 {
-            let ratio: f32 = value / (max_field_value - min_field_value);
-            let clamped_ratio: f32 = ratio.clamp(0.0, 1.0);
+        if max_field_value > min_field_value {
+            let normalized_value: f32 = (value - min_field_value) / (max_field_value - min_field_value);
+            let clamped_normalized_value: f32 = normalized_value.clamp(0.0, 1.0);
     
-            let interpolated_color: Color = self.lerp_between_colors(min_color, max_color, clamped_ratio);
+            let interpolated_color: Color = Self::lerp_between_colors(min_color, max_color, clamped_normalized_value);
 
             interpolated_color
         } else {
@@ -138,7 +138,7 @@ impl Renderer {
         }
     }
 
-    fn lerp_between_colors(&self, min_color: Color, max_color: Color, t: f32) -> Color {
+    fn lerp_between_colors(min_color: Color, max_color: Color, t: f32) -> Color {
         let t: f32 = t.clamp(0.0, 1.0);
         let min_color_vector: glam::Vec4 = min_color.to_vec();
         let max_color_vector: glam::Vec4 = max_color.to_vec();

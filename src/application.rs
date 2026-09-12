@@ -11,7 +11,7 @@ pub struct Application {
 
 impl Application {
     pub fn new() -> Self {
-        let simulation: Simulation = Simulation::new(100, 100);
+        let simulation: Simulation = Simulation::new(3, 3);
         let renderer: Renderer = Renderer::new(simulation.nx(), simulation.ny());
 
         Self {
