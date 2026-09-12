@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo/kirin_black_blue.png" alt="Logo KIRIN" width="300">
+  <img src="logo/kirin_white_blue.png" alt="Logo KIRIN" width="300">
 </p>
 
 <p align="center">
