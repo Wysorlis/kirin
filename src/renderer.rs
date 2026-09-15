@@ -4,6 +4,9 @@ use macroquad::prelude::*;
 const WORLD_WIDTH: f32 = 800.0;
 const WORLD_HEIGHT: f32 = 800.0;
 
+const EMPTY_COLOR: Color = Color::from_hex(0x101820);
+const DYE_COLOR: Color = Color::from_hex(0x80DFFF);
+
 pub struct Renderer {
     texture: Texture2D,
     image: Image,
@@ -38,10 +41,13 @@ impl Renderer {
         let (min_value, max_value) = simulation.get_field_minmax();
 
         for j in 0..simulation.ny() {
+            // La simulation compte les lignes vers le nord, l'image vers le bas.
+            let image_y = (simulation.ny() - 1 - j) as u32;
             for i in 0..simulation.nx() {
                 let value: f32 = simulation.value_at(i, j);
-                let color: Color = Self::color_map(value, min_value, max_value);
-                self.image.set_pixel(i as u32, j as u32, color);
+                // let color: Color = Self::color_map(value, min_value, max_value);
+                let color: Color = Self::sensitivity_color_map(value);
+                self.image.set_pixel(i as u32, image_y, color);
             }
         }
 
@@ -114,12 +120,19 @@ impl Renderer {
         viewport
     }
 
-    pub fn screen_to_world(&self, mouse_position: (f32, f32)) -> Vec2 {
+    /// Coordonnées normalisées du domaine : X vers l'est, Y vers le nord.
+    /// Les positions hors du domaine ne sont pas ramenées sur les bords.
+    pub fn screen_to_simulation_ratio(&mut self, mouse_position: (f32, f32)) -> Vec2 {
+        // Prend en compte un redimensionnement avant le traitement des entrées.
+        self.update_camera();
         let (x_mouse, y_mouse) = mouse_position;
 
         let world_coordinates: Vec2 = self.camera.screen_to_world(vec2(x_mouse, y_mouse));
 
-        world_coordinates
+        vec2(
+            world_coordinates.x / WORLD_WIDTH,
+            1.0 - world_coordinates.y / WORLD_HEIGHT,
+        )
     }
 
     fn color_map(value: f32, min_field_value: f32, max_field_value: f32) -> Color {
@@ -127,10 +140,12 @@ impl Renderer {
         let max_color: Color = RED;
 
         if max_field_value > min_field_value {
-            let normalized_value: f32 = (value - min_field_value) / (max_field_value - min_field_value);
+            let normalized_value: f32 =
+                (value - min_field_value) / (max_field_value - min_field_value);
             let clamped_normalized_value: f32 = normalized_value.clamp(0.0, 1.0);
-    
-            let interpolated_color: Color = Self::lerp_between_colors(min_color, max_color, clamped_normalized_value);
+
+            let interpolated_color: Color =
+                Self::lerp_between_colors(min_color, max_color, clamped_normalized_value);
 
             interpolated_color
         } else {
@@ -138,12 +153,23 @@ impl Renderer {
         }
     }
 
+    fn sensitivity_color_map(value: f32) -> Color {
+        let sensitivity = 5.0;
+        let concentration = value.max(0.0);
+        let t = concentration / (concentration + sensitivity);
+
+        let interpolated_color: Color = Self::lerp_between_colors(EMPTY_COLOR, DYE_COLOR, t);
+
+        interpolated_color
+    }
+
     fn lerp_between_colors(min_color: Color, max_color: Color, t: f32) -> Color {
         let t: f32 = t.clamp(0.0, 1.0);
         let min_color_vector: glam::Vec4 = min_color.to_vec();
         let max_color_vector: glam::Vec4 = max_color.to_vec();
 
-        let interpolated_color_vector: glam::Vec4 = glam::Vec4::lerp(min_color_vector, max_color_vector, t);
+        let interpolated_color_vector: glam::Vec4 =
+            glam::Vec4::lerp(min_color_vector, max_color_vector, t);
 
         Color::from_vec(interpolated_color_vector)
     }

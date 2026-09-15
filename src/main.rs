@@ -1,4 +1,6 @@
 mod application;
+mod matrix;
+mod mesh;
 mod renderer;
 mod simulation;
 

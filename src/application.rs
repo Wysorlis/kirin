@@ -7,17 +7,19 @@ pub struct Application {
     simulation: Simulation,
     renderer: Renderer,
     paused: bool,
+    previous_drag_position: Option<Vec2>,
 }
 
 impl Application {
     pub fn new() -> Self {
-        let simulation: Simulation = Simulation::new(3, 3);
+        let simulation: Simulation = Simulation::new();
         let renderer: Renderer = Renderer::new(simulation.nx(), simulation.ny());
 
         Self {
             simulation,
             renderer,
             paused: false,
+            previous_drag_position: None,
         }
     }
 
@@ -42,14 +44,39 @@ impl Application {
         }
 
         if is_mouse_button_down(MouseButton::Left) {
-            let click_world_coordinates: Vec2 = self.renderer.screen_to_world(mouse_position());
+            let position = self.renderer.screen_to_simulation_ratio(mouse_position());
 
-            self.simulation.add_density(
-                1.0,
-                click_world_coordinates.x / 800.0,
-                click_world_coordinates.y / 800.0,
-            );
+            self.simulation.add_dye(1.0, position.x, position.y);
         }
+
+        self.handle_velocity_drag();
+    }
+
+    fn handle_velocity_drag(&mut self) {
+        if !is_mouse_button_down(MouseButton::Right) {
+            self.previous_drag_position = None;
+            return;
+        }
+
+        let position = self.renderer.screen_to_simulation_ratio(mouse_position());
+
+        if !(0.0..1.0).contains(&position.x) || !(0.0..1.0).contains(&position.y) {
+            self.previous_drag_position = None;
+            return;
+        }
+
+        let dt = get_frame_time();
+
+        if let Some(previous) = self.previous_drag_position {
+            if dt > 0.0 {
+                let velocity = (position - previous) / dt;
+
+                self.simulation
+                    .add_mouse_velocity(position.x, position.y, velocity.x, velocity.y, dt);
+            }
+        }
+
+        self.previous_drag_position = Some(position);
     }
 }
 //
