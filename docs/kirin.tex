@@ -1,0 +1,74 @@
+% Recto verso : pages impaires à droite, pages paires à gauche.
+\documentclass[a4paper,12pt,twoside]{article}
+
+\input{imports}
+
+
+\begin{document}
+
+    \input{title}
+
+    % Page blanche sans en-tête ni numéro après la page de garde.
+    \null
+    \thispagestyle{empty}
+    \newpage
+
+    \tableofcontents
+    
+    \clearpage
+
+    \section{Introduction}
+        \input{sections/introduction/introduction}
+
+    \section{Modèle physique}
+        \subsection{Les équations de Navier--Stokes}
+        \input{sections/model/1-euler_equations}
+        
+        \subsection{Hypothèses et équations retenues}
+        \input{sections/model/2-hypothesis}
+
+        \subsection{Transport du colorant}
+        \input{sections/model/3-dye_transport}
+
+        \subsection{Conditions initiales et aux limites}
+        \input{sections/model/4-boundary_conditions}
+
+    \section{Méthodes de résolution}
+        \subsection{Formulation couplée vitesse--pression}
+        \subsection{Principe de la méthode de projection}
+        \subsection{Principe de l'approche de Stam}
+        
+    \section{Discrétisation du problème}
+        \subsection{Équations en composantes bidimensionnelles}
+        \subsection{Maillage et disposition des inconnues}
+        \subsection{Opérateurs différentiels discrets}
+        \subsection{Discrétisation temporelle}
+
+    \section{Approche conservative avec projection}
+        \subsection{Calcul des vitesses intermédiaires}
+        \subsection{Résolution de la pression et correction des vitesses}
+        \subsection{Transport du colorant}
+        \subsection{Contraintes de stabilité}
+        \subsection{Implémentation en Rust}
+    
+    \section{Approche semi-lagrangienne de Stam}
+        \subsection{Éléments communs et différences}
+        \subsection{Remontée des trajectoires et interpolation}
+        \subsection{Stabilité et limites de la méthode}
+        \subsection{Implémentation en Rust}
+
+    \section{Conclusion et perspectives}
+
+    \clearpage
+    \printbibliography[heading=bibintoc,title={Bibliographie}]
+    
+    \begin{appendices}
+        \clearpage
+        \input{sections/annexes/notions}
+
+        \clearpage
+        \input{sections/annexes/calculs}
+    \end{appendices}
+
+
+\end{document}

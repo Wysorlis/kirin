@@ -1,0 +1,38 @@
+Les équations de Navier--Stokes décrivent l'écoulement d'un fluide visqueux.
+Les bilans de masse et de quantité de mouvement sous
+\conceptlink{annexes:forme_conservative}{forme conservative} sont :
+\begin{equation}
+    \label{eq:navier_stokes}
+    \boxed{
+        \begin{aligned}
+            \frac{\partial \rho}{\partial t}
+            + \nabla \cdot (\rho \mathbf{u})
+            &= 0, \\
+            \frac{\partial (\rho \mathbf{u})}{\partial t}
+            + \nabla \cdot \left(
+                \rho \mathbf{u} \otimes \mathbf{u} + p \mathbf{I}
+            \right)
+            &= \nabla \cdot \boldsymbol{\tau} + \rho \mathbf{g}.
+        \end{aligned}}
+\end{equation}
+
+La masse volumique est notée $\rho$, la vitesse $\mathbf{u}$,
+la pression $p$ et l'accélération de la pesanteur $\mathbf{g}$.
+Le tenseur identité est noté $\mathbf{I}$, et $\otimes$ désigne
+le produit tensoriel.
+
+Le tenseur $\boldsymbol{\tau}$ représente les contraintes visqueuses.
+Pour un \conceptlink{annexes:type_fluids}{fluide newtonien isotrope}, il s'écrit :
+\begin{equation}
+    \label{eq:viscous_stress}
+    \boldsymbol{\tau}
+    = \mu \left[\nabla \mathbf{u}
+        + (\nabla \mathbf{u})^{\mathsf{T}}\right]
+    + \lambda (\nabla \cdot \mathbf{u})\mathbf{I},
+\end{equation}
+où $\mu$ est la viscosité dynamique de cisaillement et $\lambda$
+le second coefficient de viscosité.
+
+Les équations d'Euler correspondent au cas où les contraintes visqueuses
+sont négligées : $\boldsymbol{\tau} = \mathbf{0}$.
+

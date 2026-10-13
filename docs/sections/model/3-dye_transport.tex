@@ -1,0 +1,19 @@
+Le colorant (\textit{dye} en anglais) est représenté par un champ
+scalaire de concentration $c(\mathbf{x}, t)$, transporté par
+advection dans le champ de vitesse du fluide.
+Il constitue un traceur passif : sa présence n'influence pas
+la dynamique de l'écoulement, mais permet d'en visualiser le transport.
+
+En l'absence de diffusion, l'évolution de la concentration satisfait
+l'équation suivante sous
+\conceptlink{annexes:forme_conservative}{forme conservative} :
+\begin{equation}
+    \label{eq:dye_transport}
+    \boxed{
+        \frac{\partial c}{\partial t}
+        + \nabla \cdot (c\mathbf{u}) = s.
+    }
+\end{equation}
+Le terme source $s(\mathbf{x}, t)$ représente la quantité de
+concentration ajoutée par unité de temps. Ce terme pourra être utilisé pour répondre à
+l'injection de colorant par l'utilisateur.

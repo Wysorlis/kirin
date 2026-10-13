@@ -30,8 +30,8 @@ pub struct Simulation {
 
 impl Simulation {
     pub fn new() -> Self {
-        let nx: usize = 10;
-        let ny: usize = 10;
+        let nx: usize = 25;
+        let ny: usize = 25;
         let mesh: SimulationMesh = SimulationMesh::new(1.0, 1.0, nx, ny);
 
         let time: f32 = 0.0;

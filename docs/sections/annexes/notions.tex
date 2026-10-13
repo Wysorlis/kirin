@@ -1,0 +1,30 @@
+\section{Notions et définitions}
+\label{annexes:notions}
+
+\subsection{Forme conservative}
+\label{annexes:forme_conservative}
+
+Une équation sous forme conservative exprime un bilan local :
+la variation d'une quantité par unité de volume résulte des flux
+qui la transportent et d'éventuelles sources.
+Pour une grandeur scalaire $q$, elle s'écrit :
+\begin{equation*}
+    \frac{\partial q}{\partial t} + \nabla \cdot \mathbf{F} = s,
+\end{equation*}
+où $\mathbf{F}$ est le flux et $s$ le terme source.
+Sans source ni flux à travers les frontières, la quantité totale
+dans un domaine fixe est conservée.
+Par exemple, le bilan de masse utilise $q = \rho$,
+$\mathbf{F} = \rho\mathbf{u}$ et $s = 0$.
+
+\subsection{Tenseur des contraintes et modèle newtonien isotrope}
+\label{annexes:type_fluids}
+
+Le tenseur des contraintes de Cauchy décrit les efforts internes
+et se décompose ici en une contribution de pression et une contribution
+visqueuse : $\boldsymbol{\sigma} = -p\mathbf{I} + \boldsymbol{\tau}$.
+Le modèle newtonien isotrope suppose une relation linéaire entre
+les contraintes visqueuses et le tenseur des taux de déformation,
+sans direction matérielle privilégiée.
+La dérivation de cette relation et les hypothèses associées seront
+détaillées ultérieurement.

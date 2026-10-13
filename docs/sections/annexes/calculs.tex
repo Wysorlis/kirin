@@ -1,0 +1,102 @@
+\section{Dérivations et calculs complémentaires}
+\label{annexes:details_calculs}
+
+\subsection{Simplification des équations d'Euler}
+Cette dérivation concerne le cas non visqueux : l'hypothèse
+$\boldsymbol{\tau} = \mathbf{0}$ dans les bilans
+\eqref{eq:navier_stokes} donne les équations d'Euler.
+
+La masse volumique est supposée uniforme dans l'espace
+et constante dans le temps :
+\begin{equation}
+    \rho(\mathbf{x}, t) = \rho_0 > 0.
+\end{equation}
+La gravité est également négligée : $\mathbf{g} = \mathbf{0}$.
+
+\paragraph*{Conservation de la masse}
+
+L'équation de conservation de la masse s'écrit :
+\begin{equation}
+    \frac{\partial \rho}{\partial t}
+    + \nabla \cdot (\rho \mathbf{u}) = 0.
+\end{equation}
+
+Le développement de la divergence du produit donne :
+\begin{equation}
+    \frac{\partial \rho}{\partial t}
+    + \mathbf{u} \cdot \nabla \rho
+    + \rho \nabla \cdot \mathbf{u} = 0.
+\end{equation}
+
+La masse volumique étant constante, ses dérivées temporelle
+et spatiales sont nulles :
+\begin{equation}
+    \frac{\partial \rho}{\partial t} = 0,
+    \qquad
+    \nabla \rho = \mathbf{0}.
+\end{equation}
+
+Il reste donc :
+\begin{equation}
+    \rho_0 \nabla \cdot \mathbf{u} = 0.
+\end{equation}
+
+Puisque $\rho_0 > 0$, il en résulte la contrainte
+d'incompressibilité :
+\begin{equation}
+    \boxed{\nabla \cdot \mathbf{u} = 0.}
+\end{equation}
+
+\paragraph*{Conservation de la quantité de mouvement}
+
+L'équation de conservation de la quantité de mouvement s'écrit :
+\begin{equation}
+    \frac{\partial (\rho \mathbf{u})}{\partial t}
+    + \nabla \cdot \left(
+        \rho \mathbf{u} \otimes \mathbf{u}
+        + p \mathbf{I}
+    \right)
+    = \rho \mathbf{g}.
+\end{equation}
+
+La linéarité de la divergence et l'identité
+$\nabla \cdot (p \mathbf{I}) = \nabla p$ donnent :
+\begin{equation}
+    \frac{\partial (\rho \mathbf{u})}{\partial t}
+    + \nabla \cdot
+        \left(\rho \mathbf{u} \otimes \mathbf{u}\right)
+    + \nabla p
+    = \rho \mathbf{g}.
+\end{equation}
+
+La masse volumique étant constante et la gravité étant négligée,
+cette équation devient :
+\begin{equation}
+    \rho_0 \frac{\partial \mathbf{u}}{\partial t}
+    + \rho_0 \nabla \cdot
+        \left(\mathbf{u} \otimes \mathbf{u}\right)
+    + \nabla p
+    = \mathbf{0}.
+\end{equation}
+
+La division par $\rho_0$ et le passage du gradient de pression
+dans le membre de droite donnent :
+\begin{equation}
+    \frac{\partial \mathbf{u}}{\partial t}
+    + \nabla \cdot \left(\mathbf{u} \otimes \mathbf{u}\right)
+    = -\frac{1}{\rho_0}\nabla p.
+\end{equation}
+
+\paragraph*{Système obtenu}
+
+Les deux équations constituent
+le système \eqref{eq:euler_simplified} :
+\begin{equation*}
+    \begin{aligned}
+        \nabla \cdot \mathbf{u} &= 0, \\
+        \frac{\partial \mathbf{u}}{\partial t}
+        + \nabla \cdot \left(\mathbf{u} \otimes \mathbf{u}\right)
+        &= -\frac{1}{\rho_0}\nabla p.
+    \end{aligned}
+\end{equation*}
+

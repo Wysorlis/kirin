@@ -1,0 +1,178 @@
+% --------------------------------------------------
+% Language and typography — configuration for pdfLaTeX
+% --------------------------------------------------
+
+% Encodage des fontes utilisées pour composer le texte.
+%
+% T1, aussi appelé encodage Cork, définit 256 positions de caractères
+% dans une fonte, notamment des lettres accentuées européennes.
+% Ce n'est ni une police particulière, ni l'encodage du fichier source.
+%
+% Avec l'ancien encodage OT1, certains caractères accentués sont
+% construits en superposant un accent et une lettre.
+% T1 permet de les utiliser comme des caractères à part entière,
+% ce qui facilite notamment la césure des mots accentués.
+%
+% Exemple : écrire "café" ou le nom d'un auteur avec des accents.
+% T1 reste pertinent dans un document en anglais contenant ces mots.
+%
+% Avec LuaLaTeX ou XeLaTeX, utiliser plutôt fontspec :
+% ne pas reprendre cette configuration fontenc/inputenc.
+\usepackage[T1]{fontenc}
+
+% Règles de césure et intitulés automatiques en anglais.
+% Exemple : \tableofcontents porte le titre "Contents".
+% Influence également le format de \today.
+\usepackage[french]{babel}
+
+% Encodage du FICHIER SOURCE : indique comment lire les caractères
+% que tu saisis, par exemple "é".
+%
+% À distinguer de fontenc :
+% - inputenc : lecture des caractères du fichier .tex ;
+% - fontenc  : encodage des fontes pour composer le document.
+%
+% UTF-8 est déjà le défaut des versions récentes de pdfLaTeX :
+% cette ligne est donc facultative.
+\usepackage[utf8]{inputenc}
+
+% Utilise les fontes vectorielles Latin Modern, une version enrichie
+% des fontes Computer Modern traditionnelles de LaTeX.
+% Elles restent nettes à tout niveau de zoom et permettent à microtype
+% d'ajuster légèrement la largeur des caractères (expansion).
+% À charger après \usepackage[T1]{fontenc}.
+\usepackage{lmodern}
+
+% Améliore automatiquement la typographie, notamment grâce à de
+% légers ajustements de largeur des caractères et à leur placement
+% en bord de ligne, selon le moteur et les fontes.
+% Aucune commande particulière n'est nécessaire dans le texte.
+\usepackage{microtype}
+
+% Désactive la césure automatique des mots.
+% Attention : peut entraîner des espaces trop grands entre les mots
+% ou des lignes qui débordent lorsque le texte est justifié.
+\usepackage[none]{hyphenat}
+
+% Supprime les alinéas et ajoute un espace entre les paragraphes.
+\usepackage{parskip}
+
+% Personnalise la mise en forme des listes.
+\usepackage{enumitem}
+
+% Aligne les tirets sur la marge gauche.
+\setlist[itemize]{
+    label=--,
+    labelindent=0pt,
+    leftmargin=*,
+    align=left
+}
+
+% --------------------------------------------------
+% Mathematics and figures
+% --------------------------------------------------
+
+% Outils de composition mathématique : équations alignées,
+% matrices, texte dans les formules et références aux équations.
+%
+% Exemple :
+% \begin{align}
+%   u &= x + y, \\
+%   v &= x - y.
+% \end{align}
+%
+% Exemple de texte dans une formule :
+% \[ u = 0 \quad \text{on the boundary}. \]
+%
+% Exemple de référence : Equation~\eqref{eq:continuity}.
+\usepackage{amsmath}
+
+% Symboles mathématiques supplémentaires.
+% Charge aussi amsfonts, qui fournit notamment \mathbb.
+%
+% Exemple : $\mathbf{u} \in \mathbb{R}^{2}$.
+% Exemple : $A \subsetneq B$.
+\usepackage{amssymb}
+
+% Dessins vectoriels réalisés directement dans le document :
+% grilles, axes, flèches et schémas.
+%
+% Exemple :
+% \begin{tikzpicture}
+%   \draw[step=1cm, gray] (0,0) grid (3,2);
+%   \draw[->] (0,0) -- (3.5,0) node[right] {$x$};
+%   \draw[->] (0,0) -- (0,2.5) node[above] {$y$};
+% \end{tikzpicture}
+\usepackage{tikz}
+
+% Insertion d'images externes avec réglage de taille ou rotation.
+% Avec pdfLaTeX, on utilise notamment des PDF, PNG ou JPEG.
+%
+% Exemple :
+% \includegraphics[width=0.7\linewidth]{figures/grid.pdf}
+%
+% \linewidth désigne la largeur disponible à cet endroit.
+\usepackage{graphicx}
+
+% --------------------------------------------------
+% Page layout and links
+% --------------------------------------------------
+
+% Ajoute « Annexe A », « Annexe B », etc. aux titres et au sommaire.
+% Les sections d'annexe sont placées dans l'environnement appendices.
+\usepackage[title,titletoc]{appendix}
+\renewcommand{\appendixname}{Annexe}
+
+% Définit les marges : ici 2,5 cm sur les quatre côtés.
+\usepackage[margin=2.5cm]{geometry}
+
+% Conserve des espacements verticaux naturels, même en recto verso.
+% L'espace inutilisé reste en bas de page au lieu d'étirer le contenu.
+\raggedbottom
+
+% Numéros en pied de page, côté extérieur pour une reliure à gauche.
+% LE : gauche des pages paires ; RO : droite des pages impaires.
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Même disposition pour les pages utilisant le style plain.
+% Le style empty de la couverture et de la page blanche reste inchangé.
+\fancypagestyle{plain}{%
+    \fancyhf{}
+    \fancyfoot[LE,RO]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+% Gère les références stockées dans bibliography.bib.
+% Les citations sont numérotées dans leur ordre d'apparition.
+% Exemple dans le texte : \cite{stam1999stable}.
+% Latexmk lance Biber pour construire la bibliographie.
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{bibliography.bib}
+
+% Adapte les guillemets à la langue du document.
+% Recommandé avec biblatex et babel.
+\usepackage{csquotes}
+
+% Rend cliquables les références et les entrées du sommaire.
+% Fournit également les commandes \url et \href.
+%
+% hidelinks masque les couleurs et les cadres des liens,
+% mais les liens restent cliquables.
+% À charger généralement vers la fin du préambule.
+%
+% Exemple : \url{https://www.latex-project.org}
+% Exemple : \href{https://www.latex-project.org}{LaTeX Project}
+\usepackage[hidelinks]{hyperref}
+
+% Met en gras italique les termes cliquables renvoyant à une explication.
+% Premier argument : label cible ; second argument : texte affiché.
+% Exemple : \conceptlink{annexes:forme_conservative}{forme conservative}
+\newcommand{\conceptlink}[2]{%
+    \hyperref[#1]{\textbf{\textit{#2}}}%
+}

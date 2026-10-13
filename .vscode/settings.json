@@ -1,0 +1,39 @@
+{
+     "latex-workshop.latex.outDir": "%DIR%/build",
+     "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk-build",
+      "command": "latexmk",
+      "args": [
+        "-pdf",
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-outdir=%OUTDIR%",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "copy-pdf",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "Copy-Item -LiteralPath '%OUTDIR%/%DOCFILE%.pdf' -Destination '%DIR%/%DOCFILE%.pdf' -Force"
+      ]
+    }
+  ],
+
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "Compile and copy PDF",
+      "tools": [
+        "latexmk-build",
+        "copy-pdf"
+      ]
+    }
+  ],
+
+  "latex-workshop.latex.recipe.default": "first"
+}

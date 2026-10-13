@@ -1,0 +1,19 @@
+KIRIN est un projet pédagogique de développement d'un solveur
+bidimensionnel d'écoulements incompressibles, écrit en Rust.
+Son objectif principal est de présenter l'ensemble du cheminement
+qui conduit des équations physiques à leur implémentation :
+choix des hypothèses, formulation du modèle, discrétisation,
+construction des algorithmes et traduction en code.
+
+Deux approches numériques seront explorées :
+\begin{itemize}
+    \item une approche conservative, privilégiant la fidélité
+    des résultats et le respect des bilans de conservation ;
+
+    \item une approche inspirée de \textit{Stable Fluids}
+    de Jos Stam (1999)~\cite{stam1999stable}, privilégiant la robustesse et l'interactivité.
+\end{itemize}
+
+Ce document accompagne cette démarche en explicitant les choix
+physiques et numériques, leur mise en œuvre et la vérification
+des résultats obtenus.

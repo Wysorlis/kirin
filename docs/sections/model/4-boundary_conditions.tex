@@ -1,0 +1,72 @@
+\label{sec:boundary_conditions}
+
+Le domaine de calcul est un rectangle fermé
+$\Omega = [0,L_x] \times [0,L_y]$ représenté par les bords de notre simulation, délimité par quatre parois fixes.
+Le vecteur $\mathbf{n}$ désigne la normale unitaire sortante à la frontière
+$\partial\Omega$.
+Les conditions aux limites précisent le comportement de la vitesse,
+de la pression et du colorant sur ces parois.
+
+\paragraph*{Vitesse : parois imperméables}
+
+Le fluide ne traverse pas les parois : la composante normale de la vitesse
+est nulle sur la frontière.
+\begin{equation}
+    \label{eq:wall_impermeability}
+    \boxed{\mathbf{u} \cdot \mathbf{n} = 0
+        \quad \text{sur } \partial\Omega.}
+\end{equation}
+Avec $\mathbf{u} = (u,v)$, cette condition s'écrit :
+\begin{equation}
+    \begin{aligned}
+        u(0,y,t) = u(L_x,y,t) &= 0, \\
+        v(x,0,t) = v(x,L_y,t) &= 0.
+    \end{aligned}
+\end{equation}
+
+La composante tangentielle n'est pas imposée à zéro : le fluide peut
+glisser le long des murs.
+Cette condition convient au modèle non visqueux actuellement implémenté.
+Les valeurs tangentielles utilisées au bord sont prolongées par symétrie,
+sans imposer d'adhérence à la paroi.
+
+Pour une extension visqueuse, le comportement tangentiel devra être
+précisé : une paroi fixe avec adhérence impose $\mathbf{u}=\mathbf{0}$,
+tandis qu'une paroi à glissement libre impose une contrainte visqueuse
+tangentielle nulle.
+Sur une paroi plane, avec une viscosité constante non nulle, ce dernier
+choix correspond à $\partial u_{\mathrm{t}}/\partial n = 0$,
+où $u_{\mathrm{t}}$ est la composante tangentielle de la vitesse.
+
+\paragraph*{Colorant : absence de flux aux parois}
+
+En l'absence de diffusion, le flux de colorant est $c\mathbf{u}$.
+L'imperméabilité des murs entraîne donc :
+\begin{equation}
+    \label{eq:dye_boundary}
+    \boxed{(c\mathbf{u})\cdot\mathbf{n} = 0
+        \quad \text{sur } \partial\Omega.}
+\end{equation}
+Aucune concentration nulle n'est imposée au bord : le colorant peut
+être présent contre une paroi, mais ne peut pas la traverser.
+Dans ce domaine fermé, sa quantité totale ne varie que sous l'effet
+du terme source $s$ :
+\begin{equation}
+    \frac{\mathrm{d}}{\mathrm{d}t}\int_{\Omega} c\,\mathrm{d}\Omega
+    = \int_{\Omega} s\,\mathrm{d}\Omega.
+\end{equation}
+
+\paragraph*{Conditions initiales}
+
+La configuration initiale de KIRIN correspond à un fluide au repos
+et à un domaine sans colorant :
+\begin{equation}
+    \mathbf{u}(\mathbf{x},0) = \mathbf{0},
+    \qquad c(\mathbf{x},0) = 0.
+\end{equation}
+La pression est initialisée à zéro comme point de départ du solveur
+itératif ; elle est ensuite déterminée par la contrainte
+d'incompressibilité.
+Les interactions de l'utilisateur ajoutent du colorant et modifient
+la vitesse à l'intérieur du domaine, sans autoriser de flux à travers
+les murs.

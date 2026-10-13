@@ -1,0 +1,33 @@
+Les équations \eqref{eq:navier_stokes} peuvent être simplifiées sous les
+hypothèses suivantes :
+\begin{itemize}
+    \item l'écoulement est incompressible :
+    $\nabla \cdot \mathbf{u} = 0$,
+
+    \item le fluide est homogène et sa masse volumique est constante :
+    $\rho(\mathbf{x}, t) = \rho_0 > 0$,
+
+    \item la viscosité dynamique est constante : $\mu = \mu_0$,
+
+    \item la gravité est négligée : $\mathbf{g} = \mathbf{0}$.
+\end{itemize}
+Pour un fluide newtonien à viscosité constante, la contrainte
+d'incompressibilité donne
+$\nabla \cdot \boldsymbol{\tau} = \mu_0 \nabla^2 \mathbf{u}$.
+En posant $\nu = \mu_0 / \rho_0$, la viscosité cinématique,
+on obtient les équations de Navier--Stokes incompressibles :
+\begin{equation}
+    \label{eq:navier_stokes_incompressible}
+    \boxed{
+    \begin{aligned}
+        \nabla \cdot \mathbf{u} &= 0, \\
+        \frac{\partial \mathbf{u}}{\partial t}
+        + \nabla \cdot \left(\mathbf{u} \otimes \mathbf{u}\right)
+        &= -\frac{1}{\rho_0}\nabla p + \nu \nabla^2 \mathbf{u}.
+    \end{aligned}}
+\end{equation}
+
+L'écoulement considéré est bidimensionnel :
+la vitesse s'écrit $\mathbf{u} = (u,v)$ et les champs
+dépendent de $(x,y,t)$, sans dépendance selon $z$.
+

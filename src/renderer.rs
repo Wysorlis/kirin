@@ -21,8 +21,8 @@ impl Renderer {
 
         let image: Image = Image::gen_image_color(width, height, BLACK);
         let texture: Texture2D = Texture2D::from_image(&image);
-        texture.set_filter(FilterMode::Nearest);
-        // texture.set_filter(FilterMode::Linear);
+        // texture.set_filter(FilterMode::Nearest);
+        texture.set_filter(FilterMode::Linear);
         let camera: Camera2D = Self::create_camera();
 
         let render_time: f32 = 0.0;
